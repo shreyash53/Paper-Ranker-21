@@ -1,0 +1,15 @@
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <form name="search_form">
+
+    <label for="keyword">Keyword</label>
+    <input type="text" name="search_key" class="field" required>
+
+    <input type="submit" value="Search" class="btn">
+  </form>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/form.js')}}"></script>
+</body>
+</html>
