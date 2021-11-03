@@ -11,6 +11,8 @@ https://medium.com/featurepreneur/how-to-install-virtualenv-in-ubuntu-12ddebc992
 ## Install required python packages
 `pip install flask`
 `pip install pymongo`
+`pip install beautifulsoup4`
+`pip install mongoengine`
 
 ## Running the application
 `python3 driver.py`
