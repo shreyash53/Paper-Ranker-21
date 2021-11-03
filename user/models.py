@@ -1,14 +1,24 @@
 from flask import Flask, jsonify, request
-from extensions import db
+from mongoengine import *
 import uuid
+import json
 
-class User:
-	def signup(self):
+connect('paper_ranker_new',host='localhost',port=27017)
+
+class User(Document):
+	username = StringField(required=True)
+	email = EmailField(unique=True)
+	password = StringField(required=True)
+
+	meta = {
+		"indexes" : ["email"]
+	}
+
+	def json(self):
 		user = {
-			"_id" : uuid.uuid4().hex,
-			"name": request.form.get('name'),
-			"password": request.form.get('password'),
-			"email": request.form.get('email')
+			"name" : self.username,
+			"email": self.email
 		}
-		db.users.insert_one(user)
-		return jsonify(user), 200
+		return json.dumps(user)
+
+

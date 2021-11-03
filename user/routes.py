@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask import Blueprint
 from user.models import User
 
@@ -10,4 +10,7 @@ def signup():
 
 @blueprint.route("/create_user", methods=['POST'])
 def create_user():
-	return User().signup()
+	user = User(username=request.form.get('name'),
+			email=request.form.get('email'),
+			password=request.form.get('password')).save()
+	return user.json()
