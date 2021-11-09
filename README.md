@@ -14,5 +14,9 @@ https://medium.com/featurepreneur/how-to-install-virtualenv-in-ubuntu-12ddebc992
 `pip install beautifulsoup4`
 `pip install mongoengine`
 
+or do
+
+`pip install -r requirements.txt`
+
 ## Running the application
 `python3 driver.py`
