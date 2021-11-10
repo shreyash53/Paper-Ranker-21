@@ -1,7 +1,9 @@
 from flask import Flask, render_template, jsonify, request
 from flask import Blueprint
+from search.controller import paper_add, paper_search
 
-blueprint = Blueprint('Search', __name__)
+
+blueprint = Blueprint('Search', __name__, url_prefix='/paper')
 
 @blueprint.route("/")
 def home():
@@ -9,5 +11,8 @@ def home():
 
 @blueprint.route("/search", methods=['POST'])
 def search():
-	print(request.form.get('search_key'))
-	return jsonify({"data" : "success"}), 200
+	return paper_search()
+
+@blueprint.route("/add", methods=['POST'])
+def add():
+	return paper_add(request.json)

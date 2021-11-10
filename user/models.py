@@ -1,24 +1,23 @@
 from flask import Flask, jsonify, request
-from mongoengine import *
-import uuid
-import json
 
-connect('paper_ranker_new',host='localhost',port=27017)
+from mongoengine.document import Document
+from mongoengine.fields import EmailField, ListField, ReferenceField, StringField
+
+from search.models import Paper
+
 
 class User(Document):
-	username = StringField(required=True)
-	email = EmailField(unique=True)
-	password = StringField(required=True)
+    username = StringField(required=True)
+    email = EmailField(unique=True)
+    password = StringField(required=True)
+    papers = ListField(ReferenceField(Paper))
 
-	meta = {
-		"indexes" : ["email"]
-	}
+    meta = {"indexes": ["email"]}
 
-	def json(self):
-		user = {
-			"name" : self.username,
-			"email": self.email
-		}
-		return json.dumps(user)
-
-
+    def json(self):
+        user = {
+            "name": self.username,
+            "email": self.email,
+            "papers": [paper.getObject() for paper in self.papers],
+        }
+        return user
