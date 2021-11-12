@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request
 
 from search.controller import paper_add, paper_search
+from flask_cors import cross_origin
 
 blueprint = Blueprint("Search", __name__, url_prefix="/paper")
 
@@ -10,6 +11,7 @@ def home():
     #return render_template("search.html")
 
 @blueprint.route("/search", methods=["GET"])
+@cross_origin()
 def search():
     return paper_search(request.args)
 
