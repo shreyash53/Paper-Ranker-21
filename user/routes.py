@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request
-from flask import Blueprint
+from flask import Blueprint, Flask, render_template, request
+
 from user.controller import add_user_paper, login_user
 from user.models import User
 

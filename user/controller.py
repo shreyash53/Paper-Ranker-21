@@ -1,12 +1,10 @@
+from constants import (HTTP_STATUS_BAD_REQUEST,
+                       HTTP_STATUS_INTERNAL_SERVER_ERROR, HTTP_STATUS_OK)
 from flask.json import jsonify
-from constants import (
-    HTTP_STATUS_BAD_REQUEST,
-    HTTP_STATUS_INTERNAL_SERVER_ERROR,
-    HTTP_STATUS_OK,
-)
-from search.controller import paper_add_helper
-from user.models import User
 from mongoengine import DoesNotExist
+from search.controller import paper_add_helper
+
+from user.models import User
 
 
 def get_user(user_email):
@@ -26,9 +24,13 @@ def add_user_paper(request_data):
     print(user.json())
     request_data["author"] = user.username
     paper = paper_add_helper(request_data)
-    if not paper:
-        return "couldn't add paper", HTTP_STATUS_BAD_REQUEST
-
+    if paper == False:
+        return (
+            "couldn't add paper. another paper with similar title exists",
+            HTTP_STATUS_BAD_REQUEST,
+        )
+    elif not paper:
+        return "Error occured", HTTP_STATUS_INTERNAL_SERVER_ERROR
     try:
         user.papers.append(paper)
         user.save()

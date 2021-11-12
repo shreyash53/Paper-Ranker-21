@@ -1,8 +1,6 @@
-from flask import Flask, jsonify, request
-
 from mongoengine.document import Document
-from mongoengine.fields import EmailField, ListField, ReferenceField, StringField
-
+from mongoengine.fields import (EmailField, ListField, ReferenceField,
+                                StringField)
 from search.models import Paper
 
 
