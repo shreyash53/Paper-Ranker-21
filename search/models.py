@@ -1,6 +1,5 @@
-
 from mongoengine.document import Document
-from mongoengine.fields import IntField, ReferenceField, StringField
+from mongoengine.fields import IntField, ReferenceField, StringField, URLField
 
 class Conference(Document):
     name = StringField(required=True)
@@ -27,6 +26,7 @@ class Paper(Document):
     year = IntField()
     conference = ReferenceField(Conference)
     rank = IntField()
+    url = URLField()
 
     meta = {"indexes": ["title"], "ordering": ["rank"]}
 
@@ -38,5 +38,16 @@ class Paper(Document):
             "description": self.description,
             "conference": self.conference,
             "year": self.year,
+            "url": self.url,
         }
         return obj
+
+
+class RankMeta(Document):
+    conference_rank = StringField(required=True, unique=True)
+    rank_value = IntField(required=True)
+
+    meta = {"indexes": ["conference_rank"]}
+
+    def get_rank_value(self):
+        return self.rank_value
