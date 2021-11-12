@@ -7,7 +7,7 @@ class Conference(Document):
     rank = StringField(required=True)
 
     meta = {
-        "indexes": ["name", "abbr"],
+        "indexes": ["abbr"],
     }
 
     def getObject(self):
@@ -36,7 +36,7 @@ class Paper(Document):
             "title": self.title,
             "author": self.author,
             "description": self.description,
-            "conference": self.conference,
+            "conference": self.conference.getObject(),
             "year": self.year,
             "url": self.url,
         }

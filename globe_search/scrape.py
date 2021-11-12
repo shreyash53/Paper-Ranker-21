@@ -18,6 +18,6 @@ for row in soup.find_all('tr'):
 
 def get_conference_rank_from_web(acronym):
 	if(acronym in rank.keys()):
-		return rank[acronym]["rank"]
+		return rank[acronym]
 	else:
 		return "Not found"
