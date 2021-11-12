@@ -2,7 +2,7 @@ from constants import HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_OK
 from flask.json import jsonify
 from globe_search.apiengine import PaperCollector
 from mongoengine.queryset.visitor import Q 
-from search.models import Conference, Paper
+from search.models import Conference, Paper, RankMeta
 from globe_search.scrape import get_conference_rank_from_web
 
 paper_structure = {
@@ -63,7 +63,6 @@ def paper_search_helper(params, paper_result_set):
     temp = collector.fetch_papers(params["query"])
     fetched_papers = map_ranks(temp)
     for paper_ in fetched_papers["papers"]:
-        print(type(paper_["conference"]))
         paper_obj = dict(paper_structure)
         paper_obj = Paper(
             title=paper_["title"],
@@ -71,7 +70,8 @@ def paper_search_helper(params, paper_result_set):
             year=paper_["year"],
             url=paper_["url"],
             author=",".join([author["name"] for author in paper_["authors"]]),
-            conference=paper_["conference"]
+            conference=paper_["conference"],
+            rank=map_paper_rank(paper_['conference'].rank)
         )
         paper_result_set.insert(paper_obj)
 
@@ -80,8 +80,13 @@ def paper_search(params):
         Q(title__icontains=params["query"]) | Q(description__icontains=params["query"])
     )
     if paper_result_set.count() < 5:
+        # do global search
         paper_search_helper(params, paper_result_set)
+
+    paper_result_set = paper_result_set.order_by('rank')
     return jsonify([paper_.getObject() for paper_ in paper_result_set]), HTTP_STATUS_OK
+    # return paper_result_set.to_json(), HTTP_STATUS_OK
+
 
 def getConference(conference_name):
     conference_rs = Conference.objects.filter(
@@ -96,3 +101,9 @@ def conference_add(conference_name, conference_rank, conference_abbr):
         name=conference_name, abbr=conference_abbr, rank=conference_rank
     )
     return conference_.save()
+
+def map_paper_rank(rank_):
+    rank_meta = RankMeta.objects(conference_rank=rank_).get()
+    if rank_meta:
+        return rank_meta.get_rank_value()
+    return rank_
