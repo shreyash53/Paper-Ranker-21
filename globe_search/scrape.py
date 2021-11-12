@@ -16,7 +16,7 @@ for row in soup.find_all('tr'):
 		ranking = data[2].text.strip('\n').strip('\r')
 		rank[acronym] = {"rank":ranking, "name":name}
 
-def get_conference_rank(acronym):
+def get_conference_rank_from_web(acronym):
 	if(acronym in rank.keys()):
 		return rank[acronym]["rank"]
 	else:

@@ -1,9 +1,9 @@
 from constants import HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_OK
 from flask.json import jsonify
 from globe_search.apiengine import PaperCollector
-from mongoengine.queryset.visitor import Q
-
-from .models import Conference, Paper
+from mongoengine.queryset.visitor import Q 
+from search.models import Conference, Paper
+from globe_search.scrape import get_conference_rank_from_web
 
 paper_structure = {
     "title": None,
@@ -13,7 +13,6 @@ paper_structure = {
     "year": None,
     "url": None,
 }
-
 
 def paper_add_helper(request_data):
     if Paper.objects(title=request_data["title"]):
@@ -31,6 +30,28 @@ def paper_add_helper(request_data):
         paper = None
     return paper
 
+def map_ranks(papers):
+    result = dict()
+    result["papers"] = []
+    count = 0
+    if "data" not in paper_dict:
+        return None
+    for paper in paper_dict["data"]:
+        conference_ = getConference(paper["venue"])
+        if conference_:
+            result["papers"].append(conference_)
+            result["conference"] = conference_  # storing the fetched conference obj
+            count = count + 1
+        else:
+            rank = get_conference_rank_from_web(paper["venue"])
+            if rank != "Not found":
+                paper["rank"] = rank
+                result["papers"].append(paper)
+                count = count + 1
+            else:
+                pass
+    result["total"] = count
+    return result
 
 def paper_add(request_data):
     paper = paper_add_helper(request_data)
@@ -38,9 +59,9 @@ def paper_add(request_data):
         return "Some Error Occured", HTTP_STATUS_BAD_REQUEST
     return paper.getObject(), HTTP_STATUS_OK
 
-
 def paper_search_helper(params, paper_result_set):
-    fetched_papers = PaperCollector.fetch_papers_with_ranks(params)
+    temp = PaperCollector.fetch_papers(params)
+    fetched_papers = map_ranks(temp)
     for paper_ in fetched_papers["papers"]:
         # paper_obj = dict(paper_structure)
         paper_obj = Paper(
@@ -51,11 +72,9 @@ def paper_search_helper(params, paper_result_set):
             author=",".join([author["name"] for author in paper_["authors"]]),
             conference=paper_["conference"],
         )
-
         paper_result_set.insert(paper_obj)
 
     # return paper_result_set
-
 
 def paper_search(params):
     paper_result_set = Paper.objects.filter(
