@@ -18,7 +18,7 @@ search_button.addEventListener('click', ()=>{
                     <div class="icon">
                         <img src="assets/images/feature-01.png" alt="">
                     </div>
-                <h4>${data[i]["title"]}</h4>
+                <h4><a href="${data[i]["url"]}" target="_blank">${data[i]["title"]}</a></h4>
                 <h4>CONFERENCE : ${data[i]["conference"]["abbr"]}</h4>
                 <h4>RANK : ${data[i]["conference"]["rank"]}</h4>
                 </div>

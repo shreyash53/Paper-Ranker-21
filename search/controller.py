@@ -73,7 +73,8 @@ def paper_search_helper(params, paper_result_set):
             conference=paper_["conference"],
             rank=map_paper_rank(paper_['conference'].rank)
         )
-        paper_result_set.insert(paper_obj)
+        if not Paper.objects.filter(Q(title=paper_["title"])):
+            paper_result_set.insert(paper_obj)
 
 def paper_search(params):
     paper_result_set = Paper.objects.filter(
