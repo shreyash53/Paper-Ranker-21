@@ -1,15 +1,24 @@
 import requests
+import json
 
 class PaperCollector:
     def __init__(self):
-        self.url = "https://api.semanticscholar.org/graph/v1/paper/search"
+        self.url = "https://dblp.org/search/publ/api"
 
-    def fetch_papers(self,keyword, limit=100, offset=0):
+    def fetch_papers(self, keyword, hits=1000):
         query = dict()
-        query["query"] = keyword
-        query["offset"] = offset
-        query["limit"] = limit
-        query["fields"] = "url,venue,title,abstract,year,authors"
-        result = requests.get(self.url, params=query).json()
-        # return json.dumps(result)
-        return result
+        query["q"] = keyword
+        query["h"] = hits
+        query["format"] = "json"
+        query_result = requests.get(self.url, params=query).json()
+        result = dict()
+        result["code"] = query_result["result"]["status"]["@code"]
+        result["papers"] = []
+        count = 0
+        for paper in query_result["result"]["hits"]["hit"]:
+            if(paper["info"]["type"] == "Conference and Workshop Papers"):
+                result["papers"].append(paper)
+                count = count+1
+        result["hits"] = count
+        return result 
+

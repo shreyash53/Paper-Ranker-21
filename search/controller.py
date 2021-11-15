@@ -3,9 +3,12 @@ from flask.json import jsonify
 from globe_search.apiengine import PaperCollector
 from mongoengine.queryset.visitor import Q 
 from search.models import Conference, Paper, RankMeta
-from globe_search.scrape import get_conference_rank_from_web
+from globe_search.scrape import get_conference_rank_dict
+
+rank_dict = get_conference_rank_dict()
 
 paper_structure = {
+    "paper_id":None,
     "title": None,
     "author": None,
     "description": None,
@@ -34,18 +37,20 @@ def map_ranks(paper_dict):
     result = dict()
     result["papers"] = []
     count = 0
-    if "data" not in paper_dict:
-        return None
-    for paper in paper_dict["data"]:
-        conference_ = getConference(paper["venue"])
+    if "papers" not in paper_dict:
+        return result
+    for paper in paper_dict["papers"]:
+        venue = paper["info"]["venue"]
+        acronym = venue.split()[0]
+        conference_ = getConference(acronym)
         if conference_:
             paper["conference"] = conference_
             result["papers"].append(paper) 
             count = count + 1
         else:
-            rank = get_conference_rank_from_web(paper["venue"])
-            if rank != "Not found":
-                conference_ = conference_add(rank["name"],rank["rank"],paper["venue"])
+            if acronym in rank_dict.keys():
+                conf = rank_dict[acronym]
+                conference_ = conference_add(conf["name"],conf["rank"],conf["acronym"])
                 paper["conference"] = conference_
                 result["papers"].append(paper)
                 count = count + 1
@@ -64,22 +69,24 @@ def paper_search_helper(params, paper_result_set):
     fetched_papers = map_ranks(temp)
     for paper_ in fetched_papers["papers"]:
         paper_obj = dict(paper_structure)
+        authors_list = paper_["info"]["authors"]["author"]
+        if not authors_list and type(authors_list) != dict:
+            authors_list = []
+
         paper_obj = Paper(
-            title=paper_["title"],
-            description=paper_["abstract"],
-            year=paper_["year"],
-            url=paper_["url"],
-            author=",".join([author["name"] for author in paper_["authors"]]),
+            paper_id = paper_["@id"],
+            title=paper_["info"]["title"],
+            year=paper_["info"]["year"],
+            url=paper_["info"]["url"],
+            author=authors_list,
             conference=paper_["conference"],
             rank=map_paper_rank(paper_['conference'].rank)
         )
-        if not Paper.objects.filter(Q(title=paper_["title"])):
+        if not Paper.objects.filter(Q(paper_id=paper_["@id"])):
             paper_result_set.insert(paper_obj)
 
 def paper_search(params):
-    paper_result_set = Paper.objects.filter(
-        Q(title__icontains=params["query"]) | Q(description__icontains=params["query"])
-    )
+    paper_result_set = Paper.objects.filter(Q(title__icontains=params["query"]))
     if paper_result_set.count() < 5:
         # do global search
         paper_search_helper(params, paper_result_set)
