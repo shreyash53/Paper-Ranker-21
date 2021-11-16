@@ -1,5 +1,6 @@
 from mongoengine.document import Document
-from mongoengine.fields import IntField, ReferenceField, StringField, URLField
+from mongoengine.fields import IntField, ReferenceField, StringField, URLField, ListField, DictField
+
 
 class Conference(Document):
     name = StringField(required=True)
@@ -20,22 +21,20 @@ class Conference(Document):
 
 
 class Paper(Document):
+    paper_id = StringField(required=True, unique=True)
     title = StringField(required=True)
-    author = StringField()
-    description = StringField()
+    author = ListField(DictField())
     year = IntField()
     conference = ReferenceField(Conference)
     rank = IntField()
     url = URLField()
 
-    meta = {"indexes": ["title"], "ordering": ["rank"]}
+    meta = {"indexes": ["paper_id"], "ordering": ["rank"]}
 
     def getObject(self):
         obj = {
-            # "id": str(self.id),
             "title": self.title,
             "author": self.author,
-            "description": self.description,
             "conference": self.conference.getObject(),
             "year": self.year,
             "url": self.url,

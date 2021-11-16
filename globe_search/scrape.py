@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import re
 
 url="http://cic.tju.edu.cn/faculty/zhileiliu/doc/COREComputerScienceConferenceRankings.html"
 
@@ -14,10 +15,15 @@ for row in soup.find_all('tr'):
 		acronym = data[0].text.strip('\n').strip('\r')
 		name = data[1].text.strip('\n').strip('\r')
 		ranking = data[2].text.strip('\n').strip('\r')
-		rank[acronym] = {"rank":ranking, "name":name}
+		rank[acronym] = {"rank":ranking, "name":name, "acronym": acronym}
 
-def get_conference_rank_from_web(acronym):
-	if(acronym in rank.keys()):
-		return rank[acronym]
-	else:
-		return "Not found"
+def get_conference_rank_from_web(conference):
+	pattern = ".*" + str(conference) + ".*"
+	result = dict()
+	for key, value in rank.items():
+		if(re.match(pattern, key)):
+			result[key] = value
+	return result
+
+def get_conference_rank_dict():
+	return rank
