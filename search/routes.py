@@ -5,15 +5,15 @@ from globe_search.apiengine import PaperCollector
 
 blueprint = Blueprint("Search", __name__, url_prefix="/paper")
 
-@blueprint.route("/")
-def home():
-    return render_template("search.html")
-
 @blueprint.route("/search", methods=["GET"])
 @cross_origin()
 def search():
-    return paper_search(request.args)
-
+    if len(request.args) == 0:
+        return render_template("search/search.html", papers=[])
+    else:
+        papers=paper_search(request.args)
+        print(papers)
+        return render_template("search/search.html", paper_list=papers)
 
 @blueprint.route("/add", methods=["POST"])
 def add():

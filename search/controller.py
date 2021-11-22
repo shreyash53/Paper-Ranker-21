@@ -11,27 +11,10 @@ paper_structure = {
     "paper_id":None,
     "title": None,
     "author": None,
-    "description": None,
     "conference": None,
     "year": None,
     "url": None,
 }
-
-def paper_add_helper(request_data):
-    if Paper.objects(title=request_data["title"]):
-        return False
-    paper_obj = dict(paper_structure)
-    for key in paper_structure.keys():
-        if key in request_data:
-            paper_obj[key] = request_data[key]
-
-    paper = Paper(**paper_obj)
-    try:
-        paper = paper.save()
-    except Exception as e:
-        print(e)
-        paper = None
-    return paper
 
 def map_ranks(paper_dict):
     result = dict()
@@ -57,6 +40,26 @@ def map_ranks(paper_dict):
     result["total"] = count
     return result
 
+def paper_add_helper(request_data):
+    if Paper.objects(title=request_data["title"]):
+        return False
+    paper_obj = dict(paper_structure)
+    conference_ = getConference(request_data["conference"])
+    if not conference_:
+        conf = rank_dict[request_data["conference"]]
+        conference_ = conference_add(conf["name"],conf["rank"],conf["acronym"])
+    for key in paper_structure.keys():
+        if key in request_data:
+            paper_obj[key] = request_data[key]
+    paper_obj["conference"] = conference_
+    paper = Paper(**paper_obj)
+    try:
+        paper = paper.save()
+    except Exception as e:
+        print(e)
+        paper = None
+    return paper
+
 def paper_add(request_data):
     paper = paper_add_helper(request_data)
     if not paper:
@@ -65,7 +68,7 @@ def paper_add(request_data):
 
 def paper_search_helper(params, paper_result_set):
     collector = PaperCollector()
-    temp = collector.fetch_papers(params["query"])
+    temp = collector.fetch_papers(params["q"])
     fetched_papers = map_ranks(temp)
     for paper_ in fetched_papers["papers"]:
         paper_obj = dict(paper_structure)
@@ -86,15 +89,13 @@ def paper_search_helper(params, paper_result_set):
             paper_result_set.insert(paper_obj)
 
 def paper_search(params):
-    paper_result_set = Paper.objects.filter(Q(title__icontains=params["query"]))
+    paper_result_set = Paper.objects.filter(Q(title__icontains=params["q"]))
     if paper_result_set.count() < 5:
         # do global search
         paper_search_helper(params, paper_result_set)
 
     paper_result_set = paper_result_set.order_by('rank')
-    return jsonify([paper_.getObject() for paper_ in paper_result_set]), HTTP_STATUS_OK
-    # return paper_result_set.to_json(), HTTP_STATUS_OK
-
+    return [paper_.getObject() for paper_ in paper_result_set]
 
 def getConference(conference_name):
     conference_rs = Conference.objects.filter(

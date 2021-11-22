@@ -2,8 +2,7 @@ from constants import (HTTP_STATUS_BAD_REQUEST,
                        HTTP_STATUS_INTERNAL_SERVER_ERROR, HTTP_STATUS_OK)
 from flask.json import jsonify
 from mongoengine import DoesNotExist
-from search.controller import paper_add_helper
-
+from search.controller import paper_add_helper, rank_dict
 from user.models import User
 
 
@@ -13,20 +12,19 @@ def get_user(user_email):
     except DoesNotExist:
         return None
 
-
-def add_user_paper(request_data):
-    user_email = request_data["user_email"]
-    user = get_user(user_email)
-
-    if not user:
-        return "user_email not found", HTTP_STATUS_BAD_REQUEST
-
-    print(user.json())
-    request_data["author"] = user.username
+def add_user_paper(request_data, user):
+    conference = request_data["conference"]
+    if conference not in rank_dict.keys():
+        return (
+            "Invalid conference!",
+            HTTP_STATUS_BAD_REQUEST,
+        )
+    request_data["paper_id"] = str(user.id)+str(user.paper_count)
+    user.update(set__paper_count= user.paper_count+1)
     paper = paper_add_helper(request_data)
     if paper == False:
         return (
-            "couldn't add paper. another paper with similar title exists",
+            "Couldn't add paper. another paper with similar title exists",
             HTTP_STATUS_BAD_REQUEST,
         )
     elif not paper:
