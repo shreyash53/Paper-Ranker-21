@@ -116,3 +116,15 @@ def map_paper_rank(rank_):
     if rank_meta:
         return rank_meta.get_rank_value()
     return rank_
+
+
+def delete_paper_helper(title):
+
+    try:    
+        paper_ = Paper.objects(title=title).get()
+        obj_id = paper_.pk
+        paper_.delete()
+    except Exception as e:
+        print(e)
+        return None
+    return obj_id

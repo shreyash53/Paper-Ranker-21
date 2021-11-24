@@ -4,7 +4,7 @@ from flask.json import jsonify
 from mongoengine import DoesNotExist
 from search.controller import paper_add_helper, rank_dict
 from user.models import User
-
+from search.controller import delete_paper_helper
 
 def get_user(user_email):
     try:
@@ -46,3 +46,24 @@ def login_user(request_data):
         return jsonify(user.json()), HTTP_STATUS_OK
     except DoesNotExist:
         return "Incorrect login credentials", HTTP_STATUS_BAD_REQUEST
+
+def deletePaper(paper_title, user):
+    obj_id = delete_paper_helper(paper_title)
+    if not obj_id:
+        return "Failure to delete", HTTP_STATUS_INTERNAL_SERVER_ERROR
+    try:
+        user = User.objects.update_one(pull__papers=obj_id)
+        print(user)
+        # print(user.papers)
+    except Exception as e:
+        print(e)
+        return "error", HTTP_STATUS_INTERNAL_SERVER_ERROR
+    
+    return "Successfully deleted", HTTP_STATUS_OK
+
+def getPapers(user):
+    try:
+        return jsonify(user.json()['papers']), HTTP_STATUS_OK
+    except Exception as e:
+        print(e)
+        return None, HTTP_STATUS_INTERNAL_SERVER_ERROR
