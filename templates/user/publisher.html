@@ -7,6 +7,7 @@
     <style>
       html, body {
       background-image: url("/static/search/assets/images/banner-bg.jpg");
+      background-size: cover;
       display: flex;
       justify-content: center;
       font-family: Roboto, Arial, sans-serif;
@@ -63,7 +64,7 @@
     </style>
   </head>
   <body>
-    <form method="POST">
+    <form method="POST" style="margin-top: 8%;">
       <h1>Paper Details</h1>
       <div class="formcontainer">
       <hr/>
@@ -80,6 +81,8 @@
         <input type="text" placeholder="Enter url" name="url" required>
       </div>
       <button type="submit" action="/user/add_paper">Submit</button>
+        
+      
     </form>
   </body>
 </html>
