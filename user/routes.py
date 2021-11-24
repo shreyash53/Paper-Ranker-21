@@ -1,5 +1,5 @@
 from flask import Blueprint, Flask, render_template, request, redirect
-from user.controller import add_user_paper, login_user, get_user
+from user.controller import add_user_paper, login_user, get_user, deletePaper, getPapers
 from user.models import User
 from search.models import Paper
 from flask_login import UserMixin, LoginManager, login_manager, login_user, login_required, logout_user, current_user
@@ -68,3 +68,12 @@ def add_paper():
         else:
              return render_template("user/publisher.html", error=response[0])
 
+@blueprint.route("/delete_paper", methods=['POST'])
+@login_required
+def delete_paper():
+    return deletePaper(request.get_json(), current_user)
+    
+@blueprint.route("/get_papers", methods=['GET'])
+@login_required
+def get_papers():
+    return getPapers(current_user)
