@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<title>Table V01</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="/static/user/images/icons/favicon.ico"/>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="/static/user/images/icons/favicon.ico" />
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/static/user/vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/static/user/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/static/user/vendor/animate/animate.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/static/user/vendor/select2/select2.min.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/static/user/vendor/perfect-scrollbar/perfect-scrollbar.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/static/user/css/util.css">
 	<link rel="stylesheet" type="text/css" href="/static/user/css/main.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 </head>
+
 <body>
 	<ul class="nav justify-content-end">
-  	<li class="nav-item">
-    	<a class="nav-link active" href="/user/add_paper">Add paper</a>
-  	</li>
-  	<li class="nav-item">
-    	<a class="nav-link" href="/user/logout">Logout</a>
-  	</li>
+		<li class="nav-item" style="margin-left: 5%;">
+			<a class="nav-link" href="/paper/search"><i class="fa fa-home"></i>Home</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link active" href="/user/add_paper">Add paper</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="/user/logout">Logout</a>
+		</li>
 	</ul>
 	<div class="limiter">
 		<div class="container-table100">
@@ -40,35 +45,36 @@
 								<th class="column1">Title</th>
 								<th class="column2">Conference</th>
 								<th class="column3">Rank</th>
-								<th class="column6">Action  </th>
+								<th class="column6">Action </th>
 							</tr>
 						</thead>
 						<tbody>
-								{% for paper in data.papers %}
-								<tr>
-									<td class="column1"></td>
-									<td class="column2"></td>
-									<td class="column3"></td>
-									<td class="column4"><button>Delete</button></td>
-								</tr>
-								{% endfor %}	
+							{% for paper in data.papers %}
+							<tr>
+								<td class="column1"></td>
+								<td class="column2"></td>
+								<td class="column3"></td>
+								<td class="column4"><button>Delete</button></td>
+							</tr>
+							{% endfor %}
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
 	</div>
-	
 
-<!--===============================================================================================-->	
+
+	<!--===============================================================================================-->
 	<script src="/static/user/vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="/static/user/vendor/bootstrap/js/popper.js"></script>
 	<script src="/static/user/vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="/static/user/vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="/static/user/js/main.js"></script>
 
 </body>
+
 </html>
