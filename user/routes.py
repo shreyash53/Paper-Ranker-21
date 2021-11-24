@@ -51,19 +51,20 @@ def logout():
     return redirect("/user/login")
 
 @blueprint.route("/home", methods=["GET"])
-@login_required
 def home():
+    if current_user is None or not current_user.is_authenticated:
+        return redirect("/user/login")
     return render_template("user/admin.html", data=current_user.json())
 
 @blueprint.route("/add_paper", methods=["POST", "GET"])
 @login_required
 def add_paper():
     if request.method == "GET":
-        return render_template("user/add_paper.html", error=None)
+        return render_template("user/publisher.html", error=None)
     else:
         response = add_user_paper(request.form.to_dict(), current_user)
         if response[1] == 200:
             return redirect("/user/home")
         else:
-             return render_template("user/add_paper.html", error=response[0])
+             return render_template("user/publisher.html", error=response[0])
 
