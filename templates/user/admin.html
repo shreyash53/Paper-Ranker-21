@@ -47,7 +47,7 @@
   </head>
 
   <body>
-    <ul class="nav justify-content-end">
+<!--     <ul class="nav justify-content-end">
       <li class="nav-item" style="margin-left: 5%">
         <a class="nav-link" href="/paper/search"
           ><i class="fa fa-home"></i>Home</a
@@ -59,10 +59,52 @@
       <li class="nav-item">
         <a class="nav-link" href="/user/logout">Logout</a>
       </li>
-    </ul>
+    </ul> -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+      <div class="container">
+
+      <!-- Brand -->
+      <a class="navbar-brand" href="/paper/search" target="_blank">
+        <strong>Paper <em> Ranker</em></strong>
+      </a>
+
+      <!-- Collapse -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Left -->
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/paper/search">Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/add_paper" >Add paper</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/logout">Logout</a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav nav-flex-icons">
+          <li class="nav-item">
+            <p class="active nav-link border border-light rounded">
+              {{ data.name }}
+            </p>
+          </li>
+        </ul>
+        </div>
+      </div>
+    </nav>
     <div class="limiter">
       <div class="container-table100">
         <div class="wrap-table100">
+          {% if data.papers %}
           <div class="table100">
             <table>
               <thead>
@@ -70,21 +112,39 @@
                   <th class="column1">Title</th>
                   <th class="column2">Conference</th>
                   <th class="column3">Rank</th>
-                  <th class="column6">Action</th>
+                  <th class="column6"></th>
                 </tr>
               </thead>
               <tbody>
                 {% for paper in data.papers %}
-                <tr>
-                  <td class="column1"></td>
-                  <td class="column2"></td>
-                  <td class="column3"></td>
-                  <td class="column4"><button>Delete</button></td>
+                <tr> 
+                  <td class="column1">
+                    {{ paper["title"] }}
+                  </td>
+                  <td class="column2">{{ paper["conference"]["abbr"] }}</td>
+                  <td class="column3">{{ paper["conference"]["rank"] }}</td>
+                  <td class="column6">
+                    <form method="POST" action="/user/delete_paper">
+                      <input name="title" value="{{ paper["title"] }}" hidden="true" type="text" >
+                      <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
           </div>
+          {% else %}
+            <div class="table100">
+            <table>
+              <thead>
+                <tr class="table100-head">
+                  <th class="column1">No papers</th> 
+                </tr>
+              </thead>
+            </table>
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>

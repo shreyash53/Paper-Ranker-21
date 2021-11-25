@@ -21,9 +21,25 @@
     <!-- Additional CSS Files -->
     <link rel="stylesheet" href="/static/search/assets/css/fontawesome.css" />
     <link rel="stylesheet" href="/static/search/assets/css/templatemo-host-cloud.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <style type="text/css">
+      .pagination {
+   justify-content: center;
+}
+@media only screen and (max-width: 320px) {
+
+   body { 
+      font-size: 2em; 
+   }
+
+}
+    </style>
+
   </head>
 
   <body>
@@ -41,10 +57,12 @@
     <header class="">
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-          <a class="navbar-brand" href="/paper/search">
-            <!-- <h2>Paper <em> Ranker</em> -->
-            <h1 style="font-family: 'Architects Daughter', cursive; color: #17a2b8;">Paper Ranker..!</h1>
-            </a
+          <!-- <a class="navbar-brand" href="/paper/search"> -->
+            <!-- <h1 style="color: white;">Paper <em> Ranker</em> -->
+            <!-- <h1 style="font-family: 'Architects Daughter', cursive; color: #17a2b8;">Paper Ranker..!</h1> -->
+            <!-- </a -->
+          <a class="navbar-brand" href="/paper/search"
+            ><h2>Paper <em> Ranker</em></h2></a
           >
           <button
             class="navbar-toggler"
@@ -78,8 +96,13 @@
           </div>
           <div class="functional-buttons">
             <ul>
-              <li><a href="/user/login">Log in</a></li>
-              <li><a href="/user/signup">Sign Up</a></li>
+              {% if loggedIn %}
+                <li><a href="/user/logout">Log out</a></li>
+                 <li><a href="/user/home">Publisher</a></li>
+              {% else %}
+                <li><a href="/user/login">Log in</a></li>
+                <li><a href="/user/signup">Sign Up</a></li>
+              {% endif %}
             </ul>
           </div>
         </div>
@@ -92,14 +115,14 @@
       <div class="container">
         <div class="row">
           <div class="col-md-8 offset-md-2">
-            <div class="header-text caption">
-              <h2>Search your domain</h2>
+            <div class="header-text caption" style="text-align: center;">
+              <h2>Search your domain!</h2>
               <div id="search-section">
-                <form id="seach_form" name="gs" method="GET"> 
+                <form id="seach_form" name="gs" method="GET">
                     <div class="input-group mb-3">
-                      <input type="text" class="form-control" placeholder="Enter keywords here" aria-label="keyword" aria-describedby="basic-addon2" name="q" autocomplete="on">
+                      <input type="text" class="form-control" placeholder="Enter keywords here" aria-label="keyword" aria-describedby="basic-addon2" name="q" value="{{ value }}" autocomplete="on"> 
                       <div class="input-group-append">
-                        <button class="btn btn-info" type="submit">Search Now!</button>
+                        <button class="btn btn-info" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                     </div>
                   </div>
                 </form>
@@ -119,15 +142,20 @@
             <div class="section-heading">
               {% for paper in paper_list %}
                <div class="col-md-12">
-                  <div class="feature-item">
-                    <div class="icon">
+                <div class="col-md-12">
+                  <div class="feature-item" style="floa">
+                    <div class="icon col-md-3">
                         <img src="/static/search/assets/images/feature-01.png" alt="">
                     </div>
+                    <div class="col-md-9">
                     <h4>{{ paper["title"] }}</h4>
                     <h4><a href="{{ paper["url"] }}" target="_blank">{{ paper["url"] }}</a></h4>
                     <h4>CONFERENCE : {{ paper["conference"]["abbr"] }}</h4>
                     <h4>RANK : {{ paper["conference"]["rank"] }} </h4>
+                    <!-- <h5>{{ loop.index + pagination.skip }}</h5> -->
                   </div>
+                </div>
+                </div>
               </div>
   <!--               <div class="card text-white bg-dark">
                 <div class="card-header">
@@ -147,6 +175,11 @@
       </div>
     </div>
     <!-- Features Ends Here -->
+    {% if pagintation is not none %}
+    {{ pagination.links }}
+    {% endif %}
+
+
 
     <!-- Bootstrap core JavaScript -->
     <script src="/static/search/vendor/jquery/jquery.min.js"></script>
