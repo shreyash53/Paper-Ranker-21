@@ -90,9 +90,7 @@ def paper_search_helper(params, paper_result_set):
 
 def paper_search(params):
     paper_result_set = Paper.objects.filter(Q(title__icontains=params["q"]))
-    if paper_result_set.count() < 5:
-        # do global search
-        paper_search_helper(params, paper_result_set)
+    paper_search_helper(params, paper_result_set)
 
     paper_result_set = paper_result_set.order_by('rank')
     return [paper_.getObject() for paper_ in paper_result_set]
@@ -119,7 +117,6 @@ def map_paper_rank(rank_):
 
 
 def delete_paper_helper(title):
-
     try:    
         paper_ = Paper.objects(title=title).get()
         obj_id = paper_.pk

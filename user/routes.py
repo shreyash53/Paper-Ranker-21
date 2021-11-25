@@ -48,7 +48,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect("/user/login")
+    return redirect("/paper/search")
 
 @blueprint.route("/home", methods=["GET"])
 def home():
@@ -71,7 +71,9 @@ def add_paper():
 @blueprint.route("/delete_paper", methods=['POST'])
 @login_required
 def delete_paper():
-    return deletePaper(request.get_json(), current_user)
+    print(request.form.to_dict())
+    response = deletePaper(request.form.to_dict()["title"], current_user)
+    return redirect("/user/home")
     
 @blueprint.route("/get_papers", methods=['GET'])
 @login_required
