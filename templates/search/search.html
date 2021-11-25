@@ -148,8 +148,8 @@
                         <img src="/static/search/assets/images/feature-01.png" alt="">
                     </div>
                     <div class="col-md-9" style="display:inline-block; text-align: left;">
-                    <h4>{{ paper["title"] }}</h4>
-                    <h4><a href="{{ paper["url"] }}" target="_blank">{{ paper["url"] }}</a></h4>
+                    <h4><a href="{{ paper["url"] }}" target="_blank">{{ paper["title"] }}</a></h4>
+  <!--                   <h4><a href="{{ paper["url"] }}" target="_blank">{{ paper["url"] }}</a></h4> -->
                     <h4>CONFERENCE : {{ paper["conference"]["abbr"] }}</h4>
                     <h4>RANK : {{ paper["conference"]["rank"] }} </h4>
                     <!-- <h5>{{ loop.index + pagination.skip }}</h5> -->
