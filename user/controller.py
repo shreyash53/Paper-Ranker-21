@@ -48,13 +48,13 @@ def login_user(request_data):
         return "Incorrect login credentials", HTTP_STATUS_BAD_REQUEST
 
 def deletePaper(paper_title, user):
-    obj_id = delete_paper_helper(paper_title)
-    if not obj_id:
+    paper = delete_paper_helper(paper_title)
+    if paper is None:
         return "Failure to delete", HTTP_STATUS_INTERNAL_SERVER_ERROR
     try:
-        user = User.objects.update_one(pull__papers=obj_id)
-        print(user)
-        # print(user.papers)
+        user.update(pull__papers=paper)
+        print(paper)
+        paper.delete()
     except Exception as e:
         print(e)
         return "error", HTTP_STATUS_INTERNAL_SERVER_ERROR
