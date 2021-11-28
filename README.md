@@ -1,3 +1,4 @@
+
 ## Install Mongo
 https://docs.mongodb.com/manual/administration/install-on-linux/
 
@@ -9,17 +10,18 @@ https://medium.com/featurepreneur/how-to-install-virtualenv-in-ubuntu-12ddebc992
 `Navigate to the project directory in your terminal`
 
 ## Create and activate env
-`virtualenv env`
 
-`source env/bin/activate`   
+- `virtualenv env`
 
-*(only for windows - activate env using)*
+- `source env/bin/activate`   
 
-`.env\Scripts\activate`
+	*(only for windows - activate env using)*
+
+- `.env\Scripts\activate`
 
 if it gives any error, run command
 
-*Set-ExecutionPolicy Unrestricted -Scope Process*
+- `Set-ExecutionPolicy Unrestricted -Scope Process`
 
 and then activate
 
@@ -39,6 +41,6 @@ and then activate
 
 - In the Landing page of the application:
 
-- - If you are a student, you can search for any paper by entering any query in the search box and hit enter, you will be shown the fetched results
+	- If you are a student, you can search for any paper by entering any query in the search box and hit enter, you will be shown the fetched results
 
-- - If you are a publisher, you can add papers under your own name to our application for other users to read. You just have to Sign Up with an account and add your paper
+	- If you are a publisher, you can add papers under your own name to our application for other users to read. You just have to Sign Up with an account and add your paper
