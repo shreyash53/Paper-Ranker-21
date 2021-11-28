@@ -120,8 +120,7 @@ def delete_paper_helper(title):
     try:    
         paper_ = Paper.objects(title=title).get()
         obj_id = paper_.pk
-        paper_.delete()
+        return paper_
     except Exception as e:
         print(e)
         return None
-    return obj_id
