@@ -1,5 +1,4 @@
 # Paper-Ranker
-SSD Project Phase 1 developed by Devalapparz
 
 ## Install Mongo
 https://docs.mongodb.com/manual/administration/install-on-linux/
