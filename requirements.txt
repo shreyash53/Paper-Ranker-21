@@ -1,0 +1,8 @@
+flask
+pymongo
+beautifulsoup4
+mongoengine
+flask-cors
+requests
+flask-login
+flask-paginate
